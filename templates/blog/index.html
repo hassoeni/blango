@@ -1,22 +1,21 @@
 {% extends "base.html" %}
-{% load blog_extras %}
-
+{% load blog_extras%}
 
 {% block content %}
 
 <h2>Blog Posts</h2>
- {% for item in posts %}
- <div class="row">
+ {% for post in posts %}
+  {% row "border-bottom" %}
     <div class="col">
-        <h3>{{item.title}}</h3>
-            <small>By {{ item.author|author_details:request.user }} on {{ item.published_at|date:"M, d Y" }}</small>
-        <p>{{item.summary}}</p>
+        <h3>{{post.title}}</h3>
+            {% include "blog/post-byline.html" %}
+        <p>{{post.summary}}</p>
         <p>
-            ({{item.content | wordcount}} words)
-            <a href="#"> Lees Meer</a>
+            ({{post.content | wordcount}} words)
+            <a href="{% url "blog-post-detail" post.slug%}"> Lees Meer</a>
         </p>
     </div>
- </div>
-{% endfor %}
+  {% endrow %}
+  {% endfor %}
 
 {% endblock %}
