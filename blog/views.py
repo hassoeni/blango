@@ -8,10 +8,20 @@ from django.views.decorators.vary import vary_on_headers
 logger = logging.getLogger(__name__)
 
 
+def get_ip(request):
+  from django.http import HttpResponse
+  return HttpResponse(request.META['REMOTE_ADDR'])
+
+
+
 
 # Create your views here.
 def index(request):
-  posts = Post.objects.filter(published_at__lte=timezone.now()) # fetches all the Post objects in system 
+  posts = (
+    Post.objects.filter(published_at__lte=timezone.now())
+    #.select_related("author")
+    #.defer("created_at", "modified_at")
+    ) # fetches all the Post objects in system 
   logger.debug("Got %d posts", len(posts))
   return render(request, 'blog/index.html', {"posts": posts})
 
